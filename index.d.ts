@@ -1,8 +1,8 @@
-declare module jayson {
+import {EventEmitter} from "events";
+import {TlsOptions} from "tls";
+import {Url} from "url";
 
-	import {EventEmitter} from "events";
-	import {TlsOptions} from "tls";
-	import {Url} from "url";
+declare module jayson {
 
 	import {
 		RequestOptions as NodeHttpsRequestOptions,
