@@ -1,27 +1,27 @@
 import {EventEmitter} from "events";
-import {TlsOptions} from "tls";
 import {Url} from "url";
 
+import {
+	RequestOptions as NodeHttpsRequestOptions,
+	Server as NodeHttpsServer,
+	ServerOptions as NodeHttpsServerOptions,
+} from "https";
+
+import {
+	RequestOptions as NodeHttpRequestOptions,
+	Server as NodeHttpServer,
+} from "http";
+
+import {
+	Server as NodeTcpServer,
+} from "net";
+
+import {
+	TlsOptions,
+	Server as NodeTlsServer,
+} from "tls";
+
 declare module jayson {
-
-	import {
-		RequestOptions as NodeHttpsRequestOptions,
-		Server as NodeHttpsServer,
-		ServerOptions as NodeHttpsServerOptions,
-	} from "https";
-
-	import {
-		RequestOptions as NodeHttpRequestOptions,
-		Server as NodeHttpServer,
-	} from "http";
-
-	import {
-		Server as NodeTcpServer,
-	} from "net";
-
-	import {
-		Server as NodeTlsServer,
-	} from "tls";
 
 	interface ClientOptions {
 		reviver?:Function,
