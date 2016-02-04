@@ -63,7 +63,7 @@ interface IJsonRpcMessage {
 	version:number,
 }
 
-export class Client extends EventEmitter {
+export declare class Client extends EventEmitter {
 	constructor(server?: Server, options?: ClientOptions);
 	constructor(options?: ClientOptions);
 
@@ -84,7 +84,7 @@ export class Client extends EventEmitter {
 	static tls(options: ClientTlsOptions): ClientTls;
 }
 
-export class Server extends EventEmitter {
+export declare class Server extends EventEmitter {
 	constructor(methods?: Methods, options?: ServerOptions);
 
 	method(name: string, definition: Function);
@@ -116,7 +116,7 @@ export class Server extends EventEmitter {
 	tls(options?: TlsOptions): TlsServer;
 }
 
-export class Method {
+export declare class Method {
 	constructor(handler: Function, options?: MethodOptions);
 	constructor(options: MethodOptions);
 
@@ -173,8 +173,8 @@ export module Utils {
 			(err: any, obj: Object);
 		}
 
-		export function stringify(obj: any, options: StringifyOptions, callback: StringifyCallback);
+		export declare function stringify(obj: any, options: StringifyOptions, callback: StringifyCallback);
 
-		export function parse(str: string, options: ParseOptions, callback: ParseCallback);
+		export declare function parse(str: string, options: ParseOptions, callback: ParseCallback);
 	}
 }
