@@ -68,7 +68,9 @@ export declare class Client extends EventEmitter {
 	constructor(options?: ClientOptions);
 
 	request(method: string, params: any, id?: any, callback?: Function): void;
+	request(method: string, params: any, callback?: Function): void;
 	request(method: Array<any>, params: any, id?: any, callback?: Function): void;
+	request(method: Array<any>, params: any, callback?: Function): void;
 	request(method: Array<any>, callback?: Function): void;
 
 	static http(url: string): ClientHttp;
