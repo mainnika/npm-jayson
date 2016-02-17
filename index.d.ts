@@ -120,7 +120,7 @@ export declare class Server extends EventEmitter {
 
 export declare class Method {
 	constructor(handler: Function, options?: MethodOptions);
-	constructor(options: MethodOptions);
+	constructor(options?: MethodOptions);
 
 	getHandler(): Function;
 
