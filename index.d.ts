@@ -1,46 +1,46 @@
-import {EventEmitter} from "events";
-import {Url} from "url";
+import { EventEmitter } from 'events';
+import { Url } from 'url';
 
 import {
-RequestOptions as NodeHttpsRequestOptions,
-Server as NodeHttpsServer,
-ServerOptions as NodeHttpsServerOptions,
-} from "https";
+    RequestOptions as NodeHttpsRequestOptions,
+    Server as NodeHttpsServer,
+    ServerOptions as NodeHttpsServerOptions
+} from 'https';
 
 import {
-RequestOptions as NodeHttpRequestOptions,
-Server as NodeHttpServer,
-} from "http";
+    RequestOptions as NodeHttpRequestOptions,
+    Server as NodeHttpServer
+} from 'http';
 
 import {
-Server as NodeTcpServer,
-} from "net";
+    Server as NodeTcpServer
+} from 'net';
 
 import {
-TlsOptions,
-Server as NodeTlsServer,
-} from "tls";
+    TLSSocketOptions,
+    Server as NodeTlsServer
+} from 'tls';
 
 interface ClientOptions {
-    reviver?: Function,
-    replacer?: Function,
-    version?: number,
-    generator?: Function,
-    encoding?: string,
+    reviver?: Function;
+    replacer?: Function;
+    version?: number;
+    generator?: Function;
+    encoding?: string;
 }
 
 interface ServerOptions {
-    reviver?: Function,
-    replacer?: Function,
-    router?: Function,
-    collect?: boolean,
-    params?: any,
-    version?: number,
-    encoding?: string,
+    reviver?: Function;
+    replacer?: Function;
+    router?: Function;
+    collect?: boolean;
+    params?: any;
+    version?: number;
+    encoding?: string;
 }
 
 interface MiddlewareOptions {
-    end: boolean,
+    end: boolean;
 }
 
 interface ServerTcpOptions {
@@ -49,24 +49,24 @@ interface ServerTcpOptions {
 }
 
 interface MethodOptions {
-    handler?: Function,
-    collect?: boolean,
-    params?: any,
+    handler?: Function;
+    collect?: boolean;
+    params?: any;
 }
 
-interface IJsonRpcMessage {
-    id?: any,
-    result?: any,
-    error?: any,
-    params?: any,
-    method?: string,
-    version: number,
+interface JsonRpcMessage {
+    id?: any;
+    result?: any;
+    error?: any;
+    params?: any;
+    method?: string;
+    version: number;
 }
 
-interface IJsonRpcError {
-    code: number,
-    message: any,
-    data?: any,
+interface JsonRpcError {
+    code: number;
+    message: any;
+    data?: any;
 }
 
 export class Client extends EventEmitter {
@@ -107,7 +107,7 @@ export class Server extends EventEmitter {
 
     getMethod(name: string): Method;
 
-    error(code?: number, message?: string, data?: any): IJsonRpcError;
+    error(code?: number, message?: string, data?: any): JsonRpcError;
 
     call(request: Object, callback?: Function): void;
     call(request: Array<any>, callback?: Function): void;
@@ -121,7 +121,7 @@ export class Server extends EventEmitter {
 
     tcp(options?: ServerTcpOptions): TcpServer;
 
-    tls(options?: TlsOptions): TlsServer;
+    tls(options?: TLSSocketOptions): TlsServer;
 }
 
 export class Method {
@@ -141,7 +141,7 @@ interface ClientHttpOptions extends ClientOptions, NodeHttpRequestOptions {
 }
 interface ClientHttpsOptions extends ClientOptions, NodeHttpsRequestOptions {
 }
-interface ClientTlsOptions extends ClientOptions, TlsOptions {
+interface ClientTlsOptions extends ClientOptions, TLSSocketOptions {
 }
 interface ClientHttp extends Client {
 }
@@ -163,8 +163,8 @@ interface MiddlewareFunction {
     (req: any, res: any, next?: Function): void;
 }
 
-export module Utils {
-    export module JSON {
+export namespace Utils {
+    export namespace JSON {
         interface StringifyOptions {
             replacer?: Function;
         }
