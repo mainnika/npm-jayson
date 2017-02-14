@@ -1,0 +1,31 @@
+{
+  "name": "@types/npm-jayson",
+  "version": "1.0.0",
+  "description": "Types for https://github.com/tedeh/jayson",
+  "typings": "index.d.ts",
+  "scripts": {
+    "lint": "tslint \"**/*.ts\" -e \"node_modules/**\" -e \"typings/**\" -e bundle.d.ts",
+    "bundle": "typings bundle -o bundle.d.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mainnika/npm-jayson.git"
+  },
+  "author": {
+    "name": "Nikita Tokarchuk",
+    "email": "nikita@tokarch.uk",
+    "url": "http://nikita.tokarch.uk"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mainnika/npm-jayson/issues"
+  },
+  "homepage": "https://github.com/mainnika/npm-jayson#readme",
+  "devDependencies": {
+    "jayson": "^2.0.2",
+    "tslint": "^4.4.2",
+    "tslint-config-typings": "^0.3.1",
+    "typescript": "^2.1.6",
+    "typings": "^2.1.0"
+  }
+}
