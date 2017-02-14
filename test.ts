@@ -51,7 +51,7 @@ class ExtendFromJaysonServer extends jayson.Server {
 
     private foo(args: any[], callback: (err: any, result: any) => void): void {
 
-        const response: jayson.IJsonRpcMessage = {
+        const response: jayson.JsonRpcMessage = {
             id: 1,
             method: 'bar',
             version: 2
