@@ -1,5 +1,5 @@
 {
-  "name": "@types/npm-jayson",
+  "name": "@types/jayson",
   "version": "1.0.0",
   "description": "Types for https://github.com/tedeh/jayson",
   "typings": "index.d.ts",
