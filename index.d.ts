@@ -17,7 +17,7 @@ import {
 } from 'net';
 
 import {
-    TLSSocketOptions,
+    TlsOptions,
     Server as NodeTlsServer
 } from 'tls';
 
@@ -121,7 +121,7 @@ export class Server extends EventEmitter {
 
     tcp(options?: ServerTcpOptions): TcpServer;
 
-    tls(options?: TLSSocketOptions): TlsServer;
+    tls(options?: TlsOptions): TlsServer;
 }
 
 export class Method {
@@ -141,7 +141,7 @@ interface ClientHttpOptions extends ClientOptions, NodeHttpRequestOptions {
 }
 interface ClientHttpsOptions extends ClientOptions, NodeHttpsRequestOptions {
 }
-interface ClientTlsOptions extends ClientOptions, TLSSocketOptions {
+interface ClientTlsOptions extends ClientOptions, TlsOptions {
 }
 interface ClientHttp extends Client {
 }
