@@ -1,7 +1,6 @@
 {
   "name": "jayson",
   "main": "index.d.ts",
-  "globalDevDependencies": {
-    "node": "registry:dt/node#7.0.0+20170204020307"
-  }
+  "globalDevDependencies": {},
+  "globalDependencies": {}
 }

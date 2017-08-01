@@ -1,188 +1,127 @@
 import { EventEmitter } from 'events';
-import { Url } from 'url';
 
-import {
-	RequestOptions as NodeHttpsRequestOptions,
-	Server as NodeHttpsServer,
-	ServerOptions as NodeHttpsServerOptions
-} from 'https';
-
-import {
-	RequestOptions as NodeHttpRequestOptions,
-	Server as NodeHttpServer
-} from 'http';
-
-import {
-	Server as NodeTcpServer
-} from 'net';
-
-import {
-	TlsOptions,
-	Server as NodeTlsServer
-} from 'tls';
-
-interface ClientOptions {
-	reviver?: Function;
-	replacer?: Function;
-	version?: number;
-	generator?: Function;
-	encoding?: string;
+export interface ClientOptions {
+  reviver?: Function;
+  replacer?: Function;
+  version?: number;
+  generator?: Function;
+  encoding?: string;
 }
 
-interface ServerOptions {
-	reviver?: Function;
-	replacer?: Function;
-	router?: Function;
-	collect?: boolean;
-	params?: any;
-	version?: number;
-	encoding?: string;
+export interface ServerOptions {
+  reviver?: Function;
+  replacer?: Function;
+  router?: Function;
+  collect?: boolean;
+  params?: any;
+  version?: number;
+  encoding?: string;
 }
 
-interface MiddlewareOptions {
-	end: boolean;
+export interface MethodOptions<T, R> {
+  handler?: MethodHandler<T, R>;
+  collect?: boolean;
+  params?: any;
 }
 
-interface ServerTcpOptions {
-	allowHalfOpen?: boolean;
-	pauseOnConnect?: boolean;
+export interface JsonRpcMessage {
+  id: string | number | null;
+  version: number;
 }
 
-interface MethodOptions {
-	handler?: Function;
-	collect?: boolean;
-	params?: any;
+export interface JsonRpcMessageRequest<T = any> extends JsonRpcMessage {
+  params?: T;
+  method?: string;
 }
 
-interface JsonRpcMessage {
-	id?: any;
-	result?: any;
-	error?: any;
-	params?: any;
-	method?: string;
-	version: number;
+export interface JsonRpcMessageResponse<T = any> extends JsonRpcMessage {
+  result?: T;
+  error?: JsonRpcError;
 }
 
-interface JsonRpcError {
-	code: number;
-	message: any;
-	data?: any;
+export interface JsonRpcError<T = any> {
+  code: number;
+  message: string;
+  data?: T;
 }
+
+export type ResponseCallback<T> = (err?: {}, response?: JsonRpcMessageResponse<T>) => void;
+export type ResponseCallbackBatch = (err: {} | undefined, responses: JsonRpcMessageResponse[]) => void;
+export type ResponseCallbackSplitted<T> = (err?: {}, responseErr?: JsonRpcError, responseResult?: T) => void;
+export type ResponseCallbackSplittedBatch = (err: {} | undefined, errorResponces: JsonRpcMessageResponse[], successResponces: JsonRpcMessageResponse[]) => void;
 
 export class Client extends EventEmitter {
-	constructor(server?: Server, options?: ClientOptions);
-	constructor(options?: ClientOptions);
+  constructor(server?: Server, options?: ClientOptions);
+  constructor(options?: ClientOptions);
 
-	request(method: string, params: any, id?: any, callback?: Function): void;
-	request(method: string, params: any, callback?: Function): void;
-	request(method: Array<any>, params: any, id?: any, callback?: Function): void;
-	request(method: Array<any>, params: any, callback?: Function): void;
-	request(method: Array<any>, callback?: Function): void;
+  request<T, R>(method: string, params?: T, callback?: ResponseCallback<R>): JsonRpcMessageRequest<T>;
+  request<T, R>(method: string, params?: T, callback?: ResponseCallbackSplitted<R>): JsonRpcMessageRequest<T>;
+  request<T, R>(method: string, params?: T, id?: string | number | null, callback?: ResponseCallback<R>): JsonRpcMessageRequest<T>;
+  request<T, R>(method: string, params?: T, id?: string | number | null, callback?: ResponseCallbackSplitted<R>): JsonRpcMessageRequest<T>;
 
-	static http(url: string): ClientHttp;
-	static http(options: ClientHttpOptions): ClientHttp;
+  request<T, R>(method: JsonRpcMessageRequest<T>, callback?: ResponseCallback<R>): JsonRpcMessageRequest<T>;
+  request<T, R>(method: JsonRpcMessageRequest<T>, callback?: ResponseCallbackSplitted<R>): JsonRpcMessageRequest<T>;
+  request<T, R>(method: JsonRpcMessageRequest<T>, id?: string | number | null, callback?: ResponseCallback<R>): JsonRpcMessageRequest<T>;
+  request<T, R>(method: JsonRpcMessageRequest<T>, id?: string | number | null, callback?: ResponseCallbackSplitted<R>): JsonRpcMessageRequest<T>;
 
-	static https(url: string): ClientHttps;
-	static https(options: ClientHttpsOptions): ClientHttps;
-
-	static tcp(url: string): ClientTcp;
-	static tcp(options: ClientOptions): ClientTcp;
-
-	static tls(url: string): ClientTls;
-	static tls(options: ClientTlsOptions): ClientTls;
+  request(method: JsonRpcMessageRequest[], callback?: ResponseCallbackBatch): JsonRpcMessageRequest;
+  request(method: JsonRpcMessageRequest[], callback?: ResponseCallbackSplittedBatch): JsonRpcMessageRequest;
 }
+
+export type MethodCallback<R> = (err: {} | undefined, response: R) => void;
+export type MethodHandler<T = any, R = any> = (request: T, callback: MethodCallback<R>) => void;
 
 export class Server extends EventEmitter {
-	constructor(methods?: Methods, options?: ServerOptions);
+  constructor(methods?: Methods, options?: ServerOptions);
 
-	method(name: string, definition: Function): void;
-	method(name: string, definition: Client): void;
-	method(name: string, definition: Method): void;
+  method<T, R>(name: string, definition: MethodHandler<T, R>): void;
+  method<T, R>(name: string, definition: Method<T, R>): void;
+  method(name: string, definition: Client): void;
 
-	methods(methods?: Object): void;
+  methods(methods?: Methods): void;
+  hasMethod(name: string): boolean;
+  removeMethod(name: string): void;
+  getMethod(name: string): Method;
 
-	hasMethod(name: string): boolean;
+  error<T>(code?: number, message?: string, data?: T): JsonRpcError<T>;
 
-	removeMethod(name: string): void;
-
-	getMethod(name: string): Method;
-
-	error(code?: number, message?: string, data?: any): JsonRpcError;
-
-	call(request: Object, callback?: Function): void;
-	call(request: Array<any>, callback?: Function): void;
-	call(request: string, callback?: Function): void;
-
-	http(): HttpServer;
-
-	https(options?: NodeHttpsServerOptions): HttpsServer;
-
-	middleware(options?: MiddlewareOptions): MiddlewareFunction;
-
-	tcp(options?: ServerTcpOptions): TcpServer;
-
-	tls(options?: TlsOptions): TlsServer;
+  call<T, R>(request: JsonRpcMessageRequest<T>, callback?: (err?: JsonRpcError, response?: JsonRpcMessageResponse<R>) => void): void;
+  call(requests: JsonRpcMessageRequest[], callback?: (err: null, responses: JsonRpcMessageResponse[]) => void): void;
+  call<R>(request: string, callback?: (err?: JsonRpcError, response?: JsonRpcMessageResponse<R>) => void): void;
 }
 
-export class Method {
-	constructor(handler: Function, options?: MethodOptions);
-	constructor(options?: MethodOptions);
+export class Method<T = any, R = any> {
+  constructor(handler: MethodHandler<T, R>, options?: MethodOptions<T, R>);
+  constructor(options?: MethodOptions<T, R>);
 
-	getHandler(): Function;
+  getHandler(): MethodHandler<T, R>;
 
-	execute(server: Server, params?: any, callback?: Function): void;
+  execute(server: Server, params?: T, callback?: MethodCallback<R>): void;
 }
 
 interface Methods {
-	[name: string]: Function;
-}
-
-interface ClientHttpOptions extends ClientOptions, NodeHttpRequestOptions {
-}
-interface ClientHttpsOptions extends ClientOptions, NodeHttpsRequestOptions {
-}
-interface ClientTlsOptions extends ClientOptions, TlsOptions {
-}
-interface ClientHttp extends Client {
-}
-interface ClientHttps extends ClientHttp {
-}
-interface ClientTcp extends Client {
-}
-interface ClientTls extends ClientTcp {
-}
-interface HttpServer extends NodeHttpServer {
-}
-interface HttpsServer extends NodeHttpsServer {
-}
-interface TcpServer extends NodeTcpServer {
-}
-interface TlsServer extends NodeTlsServer {
-}
-interface MiddlewareFunction {
-	(req: any, res: any, next?: Function): void;
+  [name: string]: MethodHandler;
 }
 
 export namespace Utils {
-	export namespace JSON {
-		interface StringifyOptions {
-			replacer?: Function;
-		}
+  export namespace JSON {
+    interface StringifyOptions {
+      replacer?: Function;
+    }
 
-		interface StringifyCallback {
-			(err: any, str: string): void;
-		}
+    interface StringifyCallback {
+      (err: any, str: string): void;
+    }
 
-		interface ParseOptions {
-			reviver?: Function;
-		}
+    interface ParseOptions {
+      reviver?: Function;
+    }
 
-		interface ParseCallback {
-			(err: any, obj: Object): void;
-		}
+    interface ParseCallback {
+      (err: any, obj: Object): void;
+    }
 
-		export function stringify(obj: any, options: StringifyOptions, callback: StringifyCallback): void;
-
-		export function parse(str: string, options: ParseOptions, callback: ParseCallback): void;
-	}
+    export function stringify(obj: any, options: StringifyOptions, callback: StringifyCallback): void;
+    export function parse(str: string, options: ParseOptions, callback: ParseCallback): void;
+  }
 }
